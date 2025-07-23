@@ -28,9 +28,15 @@ class AuthDataSourceImpl extends AuthDataSource {
 
         final user=UserMapper.userJsonToEntity(response.data);
         return user;
+    } on DioException catch (e) {
+      if( e.response?.statusCode == 401 ){
+         throw CustomError('Token incorrecto');
+      }
+      throw Exception();
     } catch (e) {
       throw Exception();
     }
+
   }
 
   @override
@@ -46,8 +52,11 @@ class AuthDataSourceImpl extends AuthDataSource {
       return user;
     } on DioException catch (e) {     
       if(e.response?.statusCode == 401) {
-        throw CustomError('Token Inccorrecto');
+        throw CustomError(e.response?.data['message'] ?? 'Credenciales incorrectas' );
         }
+      if ( e.type == DioExceptionType.connectionTimeout ){
+        throw CustomError('Revisar conexión a internet');
+      }
       
      
       throw Exception();

@@ -22,7 +22,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository authRepository;
   final KeyValueStorageService keyValueStorageService;
 
-  AuthNotifier({required this.keyValueStorageService, required this.authRepository}): super(AuthState());
+  AuthNotifier({
+    required this.keyValueStorageService, 
+    required this.authRepository}): super(AuthState()){
+    checkAuthStatus();
+  }
 
 
 
